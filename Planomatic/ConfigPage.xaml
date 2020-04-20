@@ -1,0 +1,109 @@
+﻿<Page x:Class="Planomatic.ConfigPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:Planomatic"
+      mc:Ignorable="d" 
+      d:DesignHeight="1000" d:DesignWidth="800"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"
+      Title="ConfigPage">
+    <Grid>
+ 
+        <StackPanel>
+            <Label Margin="10" x:Name="ConfigFilenameLabel" Content="{Binding LastConfigFilename}" HorizontalAlignment="Center"></Label>
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <Label Width="150" >Server Name</Label>
+                <TextBox Text="{Binding ServerName}"/>
+            </StackPanel>
+
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <Label Width="150" >Project</Label>
+                <TextBox Text="{Binding Project}"/>
+            </StackPanel>
+
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <Label Width="150">Root Node</Label>
+                <TextBox Text="{Binding RootNode}"/>
+            </StackPanel>
+
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <Label Width="150">Releases</Label>
+                <TextBox Text="{Binding ReleaseList}"/>
+            </StackPanel>
+
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <Label Width="150">Iterations</Label>
+                <TextBox Text="{Binding IterationList}"/>
+            </StackPanel>
+
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <Label Width="150">Extra Query String</Label>
+                <TextBox Text="{Binding ExtraQuery}"/>
+            </StackPanel>
+
+            <GroupBox Header="Iteration Days Breakdown" Height="140" Margin="5">
+                <DataGrid ItemsSource="{Binding IterationDayView}" AutoGenerateColumns="False" CanUserAddRows="False" x:Name="IterationDayList">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="4*" Header=""/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration1}" x:Name="DayHeader1"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration2}" x:Name="DayHeader2"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration3}" x:Name="DayHeader3"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration4}" x:Name="DayHeader4"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration5}" x:Name="DayHeader5"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration6}" x:Name="DayHeader6"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="Team Count Breakdown" Height="300" Margin="5">
+                <DataGrid ItemsSource="{Binding TeamView}" AutoGenerateColumns="False" CanUserAddRows="False" x:Name="TeamList">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="4*" Header="Team (area level 5)" Binding="{Binding GroupName}"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration1}" x:Name="ItHeader1"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration2}" x:Name="ItHeader2"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration3}" x:Name="ItHeader3"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration4}" x:Name="ItHeader4"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration5}" x:Name="ItHeader5"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration6}" x:Name="ItHeader6"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="Devs Per Iteration" Height="90" Margin="5">
+                <DataGrid ItemsSource="{Binding DevsPerIterationView}" AutoGenerateColumns="False" CanUserAddRows="False" x:Name="DevsPerIteration" HeadersVisibility="None">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="4*" Header=""/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration1}"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration2}"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration3}"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration4}"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration5}"/>
+                        <DataGridTextColumn Width="*" Header="" Binding="{Binding Iteration6}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>            
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <Button Margin="5" Click="DeleteTeam_Click">Delete Team</Button>
+                <Button Margin="5" Click="NewTeam_Click">New Team</Button>
+            </StackPanel>
+
+        </StackPanel>
+
+        <StackPanel Margin="10" VerticalAlignment="Bottom" HorizontalAlignment="Left" >
+            <TextBox md:HintAssist.Hint="Total Capacity Days" Text="{Binding TotalCapacity}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" FontSize="24" IsReadOnly="True" 
+                     md:TextFieldAssist.TextBoxViewMargin="1 0 1 0" md:HintAssist.FloatingScale="0.50"/>
+        </StackPanel>
+
+
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+            <StackPanel.Children>
+                <Button Margin="5" Click="Save_Click">Save</Button>
+                <Button Margin="5" Click="SaveAs_Button_Click">Save As</Button>
+                <Button Margin="5" Click="LoadFrom_Click">Load From</Button>
+            </StackPanel.Children>
+        </StackPanel>
+    </Grid>
+</Page>

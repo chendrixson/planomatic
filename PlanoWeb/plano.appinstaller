@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppInstaller
+	Uri="https://planomaticstorage.z5.web.core.windows.net/plano.appinstaller"
+	Version="1.0.23.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
+	<MainPackage
+		Name="Planomatic"
+		Version="1.0.23.0"
+		Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+		Uri="https://planomaticstorage.z5.web.core.windows.net/Planomatic_1.0.23.0_x86__8wekyb3d8bbwe.msix"
+		ProcessorArchitecture="neutral" />
+	<UpdateSettings>
+		<OnLaunch
+			HoursBetweenUpdateChecks="0" />
+	</UpdateSettings>
+</AppInstaller>

@@ -1,0 +1,45 @@
+﻿<Page x:Class="Planomatic.TeamViewPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Planomatic"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="800"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"
+      Title="TeamViewPage">
+
+    <DockPanel LastChildFill="True">
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="RefreshButton" Margin="5" Click="Refresh_Click">Refresh</Button>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="4">
+            <RadioButton GroupName="SumMode" x:Name="SumModeAll" Style="{StaticResource MaterialDesignTabRadioButton}" Margin="4" IsChecked="True" Content="All Deliverables" Checked="RadioButton_Changed" Unchecked="RadioButton_Changed"/>
+            <RadioButton GroupName="SumMode" x:Name="SumModeAboveCut" Style="{StaticResource MaterialDesignTabRadioButton}" Margin="4" Content="Above Cut Line" Checked="RadioButton_Changed" Unchecked="RadioButton_Changed"/>
+            <RadioButton GroupName="SumMode" x:Name="SumModeAboveRank" Style="{StaticResource MaterialDesignTabRadioButton}" Margin="4" Content="Above Rank:" Checked="RadioButton_Changed" Unchecked="RadioButton_Changed"/>
+            <TextBox VerticalAlignment="Center" x:Name="SumRank" Text="{Binding TeamSumRank, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <GroupBox Header="Team Assigned Work" Margin="5">
+            <DataGrid ItemsSource="{Binding TeamView}" AutoGenerateColumns="False" CanUserAddRows="False" x:Name="TeamList">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="4*" Header="Team" Binding="{Binding GroupName}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="*" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True" x:Name="Capacity"/>
+                    <DataGridTextColumn Width="*" Header="Assigned" Binding="{Binding Assigned}" IsReadOnly="True" x:Name="Assigned"/>
+                    <DataGridTextColumn Width="*" Header="Over/Under" Binding="{Binding OverUnder}" IsReadOnly="True" x:Name="OverUnder">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextBlock.Background" Value="{Binding OverUnderColor}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+
+    </DockPanel>
+</Page>

@@ -1,0 +1,44 @@
+﻿<Window x:Class="Planomatic.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Planomatic"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Plan-O-Matic" Height="1200" Width="1000"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        x:Name="HostView">
+        <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MenuColumn" Width="*"/>
+            <ColumnDefinition x:Name="MainFrameColumn" Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+            <DockPanel Background="{DynamicResource PrimaryHueLightBrush}">
+            <ToggleButton x:Name="MenuPaneToggle" Style="{StaticResource MaterialDesignHamburgerToggleButton}" DockPanel.Dock="Top"  HorizontalAlignment="Right" Margin="20" IsChecked="True" Click="MenuPaneToggle_Click"/>
+                <Button DockPanel.Dock="Top" Click="Deliverables_Click" Margin="20,10,20,10">Deliverables</Button>
+            <Button DockPanel.Dock="Top" Click="CS1_Click" Margin="20,10,20,10">CS1 View</Button>
+            <Button DockPanel.Dock="Top" Click="TeamView_Click" Margin="20,10,20,10">Team View</Button>
+                <Button DockPanel.Dock="Top" Click="Config_Click" Margin="20,10,20,10">Config</Button>
+            <!--<TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" x:Name="Version">v</TextBlock>-->
+            <StackPanel VerticalAlignment="Bottom">
+                <Slider x:Name="ZoomSlider" Margin="20,10,20,10" Minimum="0" Maximum="400" Value="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Zoom" ValueChanged="Slider_ValueChanged"></Slider>
+                <Label x:Name="ZoomSliderLabel" HorizontalAlignment="Center" Padding="0,0,0,10">Zoom</Label>
+            </StackPanel>
+        </DockPanel>
+
+        <DockPanel Grid.Column="1" LastChildFill="True">
+            <ProgressBar x:Name="StatusProgress" DockPanel.Dock="Bottom" IsIndeterminate="False" />
+            <Label DockPanel.Dock="Bottom" x:Name="StatusText" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueLightBrush}">Status</Label>
+            <Frame Margin="10" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>
+        </DockPanel>
+            
+        </Grid>
+</Window>

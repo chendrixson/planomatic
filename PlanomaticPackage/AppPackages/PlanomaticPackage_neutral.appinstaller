@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppInstaller
+	Uri="file://redmond/osg/Teams/CORE/DEP/APT/Users/chendrix/PlanomaticPackage_neutral.appinstaller"
+	Version="1.0.23.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
+	<MainPackage
+		Name="Planomatic"
+		Version="1.0.23.0"
+		Publisher="CN=chendrix"
+		Uri="file://redmond/osg/Teams/CORE/DEP/APT/Users/chendrix/PlanomaticPackage_1.0.23.0_AnyCPU_Test/PlanomaticPackage_1.0.23.0_AnyCPU.appx"
+		ProcessorArchitecture="neutral" />
+	<UpdateSettings>
+		<OnLaunch
+			HoursBetweenUpdateChecks="0" />
+	</UpdateSettings>
+</AppInstaller>

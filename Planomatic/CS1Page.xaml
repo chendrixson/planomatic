@@ -1,0 +1,51 @@
+﻿<Page x:Class="Planomatic.CS1Page"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Planomatic"
+      xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"      
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="800"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"
+      Title="CS1Page">
+
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="CombineCheckbox" Margin="5" Checked="CombineCheckbox_Checked" Unchecked="CombineCheckbox_Unchecked">Group By CS1+CS2</CheckBox>
+                <Button x:Name="RefreshButton" Margin="5" Click="Refresh_Click">Refresh</Button>
+            </StackPanel>
+        </StackPanel>
+
+        <md:PopupBox Margin="0,0,0,0" StaysOpen="True" IsEnabled="True" x:Name="ItemPopup" Opened="ItemPopup_Opened" >
+            <Grid Width="300" Margin="8,8,8,8" x:Name="ItemPopupGrid">
+                <DataGrid ItemsSource="{Binding CurrentGroupView}" AutoGenerateColumns="False" CanUserAddRows="False" x:Name="CurrentGroupList" CanUserSortColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Rank" Binding="{Binding Rank}" Width="Auto"/>
+                        <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="4*"/>
+                        <DataGridTextColumn Header="Team" Binding="{Binding Team}" Width="1*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="RDD" Binding="{Binding RemainingDevDays}" Width="Auto"/>
+                        <DataGridTextColumn Header="Est" Binding="{Binding OriginalEstimate}" Width="Auto"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </md:PopupBox>
+
+        <DataGrid ItemsSource="{Binding AllGroupsView}" AutoGenerateColumns="False" CanUserAddRows="False" x:Name="AllGroupsList" CanUserSortColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="CustomString1" Binding="{Binding CustomString1}" Width="6*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Rank" Binding="{Binding Rank}" Width="1*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Total Estimate" Binding="{Binding TotalEstimate}" Width="1*" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="TextBlock.Background" Value="{Binding SumColor}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Page>
