@@ -1,0 +1,1 @@
+powershell .\SetupLocalSigning.ps1
