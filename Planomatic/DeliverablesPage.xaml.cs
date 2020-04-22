@@ -23,7 +23,7 @@ namespace Planomatic
     /// Interaction logic for DeliverablesPage.xaml
     /// </summary>
     public partial class DeliverablesPage : Page
-    {        
+    {
         public DeliverablesPage()
         {
             InitializeComponent();
@@ -72,7 +72,7 @@ namespace Planomatic
 
         private void OpenItem_Click(object sender, RoutedEventArgs e)
         {
-            if(AllDeliverableList.SelectedIndex != -1)
+            if (AllDeliverableList.SelectedIndex != -1)
             {
                 string url = myApp().DeliverableList.AllItems[AllDeliverableList.SelectedIndex].AdoUrl;
                 myApp().UpdateStatus("Opening Url: " + url);
@@ -81,7 +81,27 @@ namespace Planomatic
             }
             else
             {
-               
+
+            }
+        }
+
+        private void TeamsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox teamsComboBox = sender as ComboBox;
+            Deliverable selectedDeliverableItem = this.AllDeliverableList.CurrentItem as Deliverable;
+            string prevTeam = selectedDeliverableItem.Team;
+            string newTeam = teamsComboBox.SelectedItem as string;
+
+            if (!string.Equals(prevTeam, newTeam, StringComparison.OrdinalIgnoreCase))
+            {
+                myApp().UpdateStatus($"Team Area path changed, was: {prevTeam}, now: {newTeam}");
+
+                selectedDeliverableItem.AreaPath = selectedDeliverableItem.AreaPath.Replace(
+                    selectedDeliverableItem.Team, newTeam);
+
+                selectedDeliverableItem.Team = newTeam;
+
+                selectedDeliverableItem.Mod = true;
             }
         }
 

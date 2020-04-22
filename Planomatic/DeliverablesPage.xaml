@@ -52,12 +52,38 @@
 
         </StackPanel>
 
-        <DataGrid ItemsSource="{Binding AllItemsView}" AutoGenerateColumns="False" CanUserAddRows="False" x:Name="AllDeliverableList" CanUserSortColumns="False">
+        <DataGrid ItemsSource="{Binding AllItemsView}" AutoGenerateColumns="False"
+                  CanUserAddRows="False" x:Name="AllDeliverableList" CanUserSortColumns="False"
+                  AlternationCount ="2" RowBackground="LightCyan" HorizontalScrollBarVisibility="Visible">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" IsReadOnly="True"/>
+                <DataGridHyperlinkColumn Header="ID"
+                                         Width="Auto"
+                                         Binding="{Binding Id}"
+                                         IsReadOnly="True">
+                    <DataGridHyperlinkColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Margin"
+                                    Value="5, 0, 5, 0" />
+                            <EventSetter Event="Hyperlink.Click"
+                                         Handler="OpenItem_Click" />
+                        </Style>
+                    </DataGridHyperlinkColumn.ElementStyle>
+                </DataGridHyperlinkColumn>
                 <DataGridTextColumn Header="Rank" Binding="{Binding Rank}" Width="Auto"/>
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="4*"/>
-                <DataGridTextColumn Header="Team" Binding="{Binding Team}" Width="1*" IsReadOnly="True"/>
+
+                <DataGridComboBoxColumn Header="Team"
+                                        Width="3*"
+                                        ItemsSource="{Binding Source={x:Static local:Deliverables.TeamsCollection}}"
+                                        SelectedValueBinding="{Binding Team}">
+                    <DataGridComboBoxColumn.EditingElementStyle>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <EventSetter Event="SelectionChanged"
+                                         Handler="TeamsComboBox_SelectionChanged" />
+                        </Style>
+                    </DataGridComboBoxColumn.EditingElementStyle>
+                </DataGridComboBoxColumn>
+
                 <DataGridTextColumn Header="PMOwner" Binding="{Binding PMOwner}" Width="1*" IsReadOnly="True" Visibility="Hidden" x:Name="PMOwnerHeader"/>
                 <DataGridTextColumn Header="CS1" Binding="{Binding CustomString1}" Width="1*" Visibility="Hidden" x:Name="CustomString1Header"/>
                 <DataGridTextColumn Header="CS2" Binding="{Binding CustomString2}" Width="1*" Visibility="Hidden" x:Name="CustomString2Header"/>

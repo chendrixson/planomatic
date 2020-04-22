@@ -205,6 +205,8 @@ namespace Planomatic
             }
         }
 
+        public string AreaPath { get; set; }
+
         public string Team
         {
             get { return _team; }
@@ -424,6 +426,11 @@ namespace Planomatic
         public void SetConfig(Config c)
         {
             _myConfig = c;
+
+            foreach (TeamConfig t in myConfig().Teams)
+            {
+                TeamsCollection.Add(t.GroupName);
+            }
         }
 
         // Flat list
@@ -438,6 +445,7 @@ namespace Planomatic
         public ObservableCollection<Deliverable> CurrentGroup = new ObservableCollection<Deliverable>();
         public ICollectionView CurrentGroupView { get; private set; }
 
+        public static ObservableCollection<string> TeamsCollection = new ObservableCollection<string>();
 
         private List<Dictionary<string, object>> RefreshTask()
         {
@@ -717,6 +725,7 @@ namespace Planomatic
                         {
                             if (itemAreaPath.Contains(t.GroupName))
                             {
+                                d.AreaPath = itemAreaPath;
                                 d.Team = t.GroupName;
                                 break;
                             }
@@ -844,7 +853,11 @@ namespace Planomatic
                     if (d.RemainingDevDays.HasValue)
                     {
                         newItem[_ado.KnownFields[5]] = d.RemainingDevDays;
+                    }
 
+                    if (!string.IsNullOrWhiteSpace(d.Team))
+                    {
+                        newItem[_ado.KnownFields[11]] = d.AreaPath;
                     }
 
                     updateItems.Add(newItem);
