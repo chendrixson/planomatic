@@ -31,6 +31,7 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     msbuildArguments: '/p:AppxPackageSigningEnabled="False"'
+    displayName: 'Build without packaging'
 
 - task: VSTest@2
   inputs:
