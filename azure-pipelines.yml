@@ -14,7 +14,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   major: 1
-  minor: 0
+  minor: 1
   build: 0
   revision: $[counter('rev', 0)]
 
