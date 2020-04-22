@@ -25,22 +25,9 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- task: MSBuild@1
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    msbuildArguments: '/p:AppxPackageSigningEnabled="False"'
-    displayName: 'Build without packaging'
-
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
 - powershell: |
    [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
-   $path = "Msix/Package.appxmanifest"
+   $path = "PlanomaticPackage/Package.appxmanifest"
    $doc = [System.Xml.Linq.XDocument]::Load($path)
    $xName =
      [System.Xml.Linq.XName]
@@ -52,12 +39,11 @@ steps:
 
 - task: MSBuild@1
   inputs:
-    solution: PlanomaticPackage/PlanomaticPackage.wapproj
+    solution: $(solution)
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
-    msbuildArguments: '/p:OutputPath=NonPackagedApp
-     /p:UapAppxPackageBuildMode=SideLoadOnly  /p:AppxBundle=Never /p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\Planomatic.msix /p:AppxPackageSigningEnabled=false'
-  displayName: 'Package the App'
+    msbuildArguments: '/p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\Planomatic.msix /p:AppxPackageSigningEnabled=false'
+  displayName: 'Build and Package'
 
 - task: DownloadSecureFile@1
   inputs:
