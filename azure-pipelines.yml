@@ -30,6 +30,7 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    msbuildArguments: '/p:AppxPackageSigningEnabled="False"'
 
 - task: VSTest@2
   inputs:
