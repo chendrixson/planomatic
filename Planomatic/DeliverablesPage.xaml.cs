@@ -1,24 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.ComponentModel;
-using MaterialDesignThemes.Wpf;
-using System.Diagnostics;
 
 namespace Planomatic
 {
-
     /// <summary>
     /// Interaction logic for DeliverablesPage.xaml
     /// </summary>
@@ -70,7 +55,16 @@ namespace Planomatic
             UpdateButton.IsEnabled = true;
         }
 
-        private void OpenItem_Click(object sender, RoutedEventArgs e)
+        private void FourSevensItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (AllDeliverableList.SelectedIndex != -1)
+            {
+                myApp().DeliverableList.AllItems[AllDeliverableList.SelectedIndex].Rank = 7777;
+                myApp().DeliverableList.AllItems[AllDeliverableList.SelectedIndex].Mod = true;
+            }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RoutedEventArgs e)
         {
             if (AllDeliverableList.SelectedIndex != -1)
             {
@@ -78,10 +72,6 @@ namespace Planomatic
                 myApp().UpdateStatus("Opening Url: " + url);
 
                 System.Diagnostics.Process.Start(url);
-            }
-            else
-            {
-
             }
         }
 
@@ -92,17 +82,26 @@ namespace Planomatic
             string prevTeam = selectedDeliverableItem.Team;
             string newTeam = teamsComboBox.SelectedItem as string;
 
-            if (!string.Equals(prevTeam, newTeam, StringComparison.OrdinalIgnoreCase))
+            // In case previous team = new team - no op - return.
+            if (string.Equals(prevTeam, newTeam, StringComparison.OrdinalIgnoreCase))
             {
-                myApp().UpdateStatus($"Team Area path changed, was: {prevTeam}, now: {newTeam}");
-
-                selectedDeliverableItem.AreaPath = selectedDeliverableItem.AreaPath.Replace(
-                    selectedDeliverableItem.Team, newTeam);
-
-                selectedDeliverableItem.Team = newTeam;
-
-                selectedDeliverableItem.Mod = true;
+                return;
             }
+
+            // In case <unmapped> was selected - don't allow it - return.
+            if (string.Equals(newTeam, "<unmapped>", StringComparison.OrdinalIgnoreCase))
+            {
+                teamsComboBox.SelectedItem = prevTeam;
+                return;
+            }
+
+            // We found a new team (previous could be either <unmapped> or a different team)
+            // For building full area path - We assume that all teams are sub node of root node
+            myApp().UpdateStatus($"Team Area path changed, was: {prevTeam}, now: {newTeam}");
+
+            selectedDeliverableItem.AreaPath = $@"{myConfig().RootNode}\{newTeam}";
+            selectedDeliverableItem.Team = newTeam;
+            selectedDeliverableItem.Mod = true;
         }
 
         private void ShowCustomString1_Checked(object sender, RoutedEventArgs e)

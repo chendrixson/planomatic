@@ -10,7 +10,6 @@
       Background="{DynamicResource MaterialDesignPaper}"
       FontFamily="{DynamicResource MaterialDesignFont}"
       Title="DeliverablesPage">
-
     <DockPanel LastChildFill="True">
 
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
@@ -45,7 +44,7 @@
                 
                 <Button x:Name="RefreshButton" Margin="5" Click="Refresh_Click">Refresh</Button>
                 <Button x:Name="ResortButton" Margin="5" Click="Resort_Click">Resort</Button>
-                <Button x:Name="OpenItem" Margin="5" Click="OpenItem_Click">Open Item</Button>
+                <Button x:Name="OpenItem" Margin="5" Click="FourSevensItem_Click">7777 Item</Button>
                 <Button x:Name="UpdateButton" Margin="5" Click="Update_Click">Update</Button>
 
             </StackPanel>
@@ -54,7 +53,43 @@
 
         <DataGrid ItemsSource="{Binding AllItemsView}" AutoGenerateColumns="False"
                   CanUserAddRows="False" x:Name="AllDeliverableList" CanUserSortColumns="False"
-                  AlternationCount ="2" RowBackground="LightCyan" HorizontalScrollBarVisibility="Visible">
+                  AlternationCount ="2" HorizontalScrollBarVisibility="Visible">
+
+            <!-- Define the alternating rows coloring -->
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Setter Property="Background"
+                            Value="Transparent" />
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex"
+                                 Value="0">
+                            <Setter Property="Background"
+                                    Value="LightCyan"></Setter>
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex"
+                                 Value="1">
+                            <Setter Property="Background"
+                                    Value="WhiteSmoke"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver"
+                                 Value="true">
+                            <Setter Property="Background"
+                                    Value="Lavender" />
+                            <Setter Property="Foreground"
+                                    Value="#000" />
+                        </Trigger>
+                        <Trigger Property="IsSelected"
+                                 Value="true">
+                            <Setter Property="Background"
+                                    Value="Transparent" />
+                            <Setter Property="Foreground"
+                                    Value="Transparent" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <!-- Define DataGrid columns -->
             <DataGrid.Columns>
                 <DataGridHyperlinkColumn Header="ID"
                                          Width="Auto"
@@ -62,10 +97,9 @@
                                          IsReadOnly="True">
                     <DataGridHyperlinkColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Margin"
-                                    Value="5, 0, 5, 0" />
+
                             <EventSetter Event="Hyperlink.Click"
-                                         Handler="OpenItem_Click" />
+                                         Handler="Hyperlink_RequestNavigate" />
                         </Style>
                     </DataGridHyperlinkColumn.ElementStyle>
                 </DataGridHyperlinkColumn>
@@ -73,7 +107,7 @@
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="4*"/>
 
                 <DataGridComboBoxColumn Header="Team"
-                                        Width="3*"
+                                        Width="2*"
                                         ItemsSource="{Binding Source={x:Static local:Deliverables.TeamsCollection}}"
                                         SelectedValueBinding="{Binding Team}">
                     <DataGridComboBoxColumn.EditingElementStyle>
@@ -81,6 +115,7 @@
                             <EventSetter Event="SelectionChanged"
                                          Handler="TeamsComboBox_SelectionChanged" />
                         </Style>
+                        
                     </DataGridComboBoxColumn.EditingElementStyle>
                 </DataGridComboBoxColumn>
 

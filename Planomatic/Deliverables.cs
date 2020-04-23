@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
-
 
 namespace Planomatic
 {
@@ -427,6 +425,8 @@ namespace Planomatic
         {
             _myConfig = c;
 
+            TeamsCollection.Clear();
+            TeamsCollection.Add("<unmapped>"); // Need to add <unmapped> to make this value legal.
             foreach (TeamConfig t in myConfig().Teams)
             {
                 TeamsCollection.Add(t.GroupName);
@@ -725,7 +725,8 @@ namespace Planomatic
                         {
                             if (itemAreaPath.Contains(t.GroupName))
                             {
-                                d.AreaPath = itemAreaPath;
+                                // To allow changing area path, We only consider area path up to the group name, as sub nodes can't be moved.
+                                d.AreaPath = itemAreaPath.Substring(0, itemAreaPath.IndexOf(t.GroupName) + t.GroupName.Length);
                                 d.Team = t.GroupName;
                                 break;
                             }
@@ -855,7 +856,8 @@ namespace Planomatic
                         newItem[_ado.KnownFields[5]] = d.RemainingDevDays;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(d.Team))
+                    if (!string.IsNullOrWhiteSpace(d.AreaPath) &&
+                        !string.Equals(d.Team, "<unmapped>", StringComparison.OrdinalIgnoreCase))
                     {
                         newItem[_ado.KnownFields[11]] = d.AreaPath;
                     }
