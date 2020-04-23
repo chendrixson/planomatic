@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
-
 
 namespace Planomatic
 {
@@ -204,6 +202,10 @@ namespace Planomatic
                 }
             }
         }
+
+        public string AreaPath { get; set; }
+
+        public bool AreaPathModified { get; set; }
 
         public string Team
         {
@@ -424,6 +426,22 @@ namespace Planomatic
         public void SetConfig(Config c)
         {
             _myConfig = c;
+
+            TeamsCollection.Clear();
+            TeamsCollection.Add("<unmapped>"); // Need to add <unmapped> to make this value legal.
+
+            // Set TeamsRootNode base on RootNode
+            // Ex. If team nodes are APT\A, APT\B - RootNode can be: APT or A or B (user choice)
+            // but Teams root node will always be APT
+            c.TeamsRootNode = c.RootNode;
+            foreach (TeamConfig t in myConfig().Teams)
+            {
+                TeamsCollection.Add(t.GroupName);
+                if (c.RootNode.Contains(t.GroupName))
+                {
+                    c.TeamsRootNode = c.RootNode.Substring(0, c.RootNode.IndexOf(t.GroupName));
+                }
+            }
         }
 
         // Flat list
@@ -438,6 +456,7 @@ namespace Planomatic
         public ObservableCollection<Deliverable> CurrentGroup = new ObservableCollection<Deliverable>();
         public ICollectionView CurrentGroupView { get; private set; }
 
+        public static ObservableCollection<string> TeamsCollection = new ObservableCollection<string>();
 
         private List<Dictionary<string, object>> RefreshTask()
         {
@@ -708,14 +727,14 @@ namespace Planomatic
                     // Map the team to anything that matches the substring
                     if (item.ContainsKey(_ado.KnownFields[11]))
                     {
-                        string itemAreaPath = item[_ado.KnownFields[11]].ToString();
+                        d.AreaPath = item[_ado.KnownFields[11]].ToString();
 
                         // Find which team
                         d.Team = "<unmapped>";
 
                         foreach (TeamConfig t in myConfig().Teams)
                         {
-                            if (itemAreaPath.Contains(t.GroupName))
+                            if (d.AreaPath.Contains(t.GroupName))
                             {
                                 d.Team = t.GroupName;
                                 break;
@@ -844,7 +863,11 @@ namespace Planomatic
                     if (d.RemainingDevDays.HasValue)
                     {
                         newItem[_ado.KnownFields[5]] = d.RemainingDevDays;
+                    }
 
+                    if (d.AreaPathModified)
+                    {
+                        newItem[_ado.KnownFields[11]] = d.AreaPath;
                     }
 
                     updateItems.Add(newItem);

@@ -1,29 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.ComponentModel;
-using MaterialDesignThemes.Wpf;
-using System.Diagnostics;
 
 namespace Planomatic
 {
-
     /// <summary>
     /// Interaction logic for DeliverablesPage.xaml
     /// </summary>
     public partial class DeliverablesPage : Page
-    {        
+    {
         public DeliverablesPage()
         {
             InitializeComponent();
@@ -70,19 +55,54 @@ namespace Planomatic
             UpdateButton.IsEnabled = true;
         }
 
-        private void OpenItem_Click(object sender, RoutedEventArgs e)
+        private void FourSevensItem_Click(object sender, RoutedEventArgs e)
         {
-            if(AllDeliverableList.SelectedIndex != -1)
+            if (AllDeliverableList.SelectedIndex != -1)
+            {
+                myApp().DeliverableList.AllItems[AllDeliverableList.SelectedIndex].Rank = 7777;
+                myApp().DeliverableList.AllItems[AllDeliverableList.SelectedIndex].Mod = true;
+            }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RoutedEventArgs e)
+        {
+            if (AllDeliverableList.SelectedIndex != -1)
             {
                 string url = myApp().DeliverableList.AllItems[AllDeliverableList.SelectedIndex].AdoUrl;
                 myApp().UpdateStatus("Opening Url: " + url);
 
                 System.Diagnostics.Process.Start(url);
             }
-            else
+        }
+
+        private void TeamsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox teamsComboBox = sender as ComboBox;
+            Deliverable selectedDeliverableItem = this.AllDeliverableList.CurrentItem as Deliverable;
+            string prevTeam = selectedDeliverableItem.Team;
+            string newTeam = teamsComboBox.SelectedItem as string;
+
+            // In case previous team = new team - no op - return.
+            if (string.Equals(prevTeam, newTeam, StringComparison.OrdinalIgnoreCase))
             {
-               
+                return;
             }
+
+            // In case <unmapped> was selected - don't allow it - return.
+            if (string.Equals(newTeam, "<unmapped>", StringComparison.OrdinalIgnoreCase))
+            {
+                teamsComboBox.SelectedItem = prevTeam;
+                return;
+            }
+
+            // We found a new team (previous could be either <unmapped> or a different team)
+            // For building full area path - We assume that all teams are sub node of root node
+            myApp().UpdateStatus($"Team Area path changed, was: {prevTeam}, now: {newTeam}");
+
+            selectedDeliverableItem.Team = newTeam;
+            selectedDeliverableItem.AreaPath = $@"{myConfig().TeamsRootNode}\{newTeam}";
+            selectedDeliverableItem.AreaPathModified = true;
+            selectedDeliverableItem.Mod = true;
         }
 
         private void ShowCustomString1_Checked(object sender, RoutedEventArgs e)

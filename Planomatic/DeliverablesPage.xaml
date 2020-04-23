@@ -10,7 +10,6 @@
       Background="{DynamicResource MaterialDesignPaper}"
       FontFamily="{DynamicResource MaterialDesignFont}"
       Title="DeliverablesPage">
-
     <DockPanel LastChildFill="True">
 
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
@@ -45,19 +44,108 @@
                 
                 <Button x:Name="RefreshButton" Margin="5" Click="Refresh_Click">Refresh</Button>
                 <Button x:Name="ResortButton" Margin="5" Click="Resort_Click">Resort</Button>
-                <Button x:Name="OpenItem" Margin="5" Click="OpenItem_Click">Open Item</Button>
+                <Button x:Name="OpenItem" Margin="5" Click="FourSevensItem_Click">7777 Item</Button>
                 <Button x:Name="UpdateButton" Margin="5" Click="Update_Click">Update</Button>
 
             </StackPanel>
 
         </StackPanel>
 
-        <DataGrid ItemsSource="{Binding AllItemsView}" AutoGenerateColumns="False" CanUserAddRows="False" x:Name="AllDeliverableList" CanUserSortColumns="False">
+        <DataGrid ItemsSource="{Binding AllItemsView}" AutoGenerateColumns="False"
+                  CanUserAddRows="False" x:Name="AllDeliverableList" CanUserSortColumns="False"
+                  AlternationCount ="2">
+
+            <!-- Data Grid Cell Style -->
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding"
+                            Value="10" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                <Border Padding="{TemplateBinding Padding}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        Background="{TemplateBinding Background}"
+                                        SnapsToDevicePixels="True">
+                                    <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="Silver" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+
+            <!-- Define the alternating rows coloring -->
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Setter Property="Background"
+                            Value="Transparent" />
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex"
+                                 Value="0">
+                            <Setter Property="Background"
+                                    Value="LightCyan"></Setter>
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex"
+                                 Value="1">
+                            <Setter Property="Background"
+                                    Value="WhiteSmoke"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver"
+                                 Value="true">
+                            <Setter Property="Background"
+                                    Value="Lavender" />
+                            <Setter Property="Foreground"
+                                    Value="#000" />
+                        </Trigger>
+                        <Trigger Property="IsSelected"
+                                 Value="true">
+                            <Setter Property="Background"
+                                    Value="#CCDAFF" />
+                            <Setter Property="Foreground"
+                                    Value="#CCDAFF" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <!-- Define DataGrid columns -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto" IsReadOnly="True"/>
+                <DataGridHyperlinkColumn Header="ID"
+                                         Width="Auto"
+                                         Binding="{Binding Id}"
+                                         IsReadOnly="True">
+                    <DataGridHyperlinkColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+
+                            <EventSetter Event="Hyperlink.Click"
+                                         Handler="Hyperlink_RequestNavigate" />
+                        </Style>
+                    </DataGridHyperlinkColumn.ElementStyle>
+                </DataGridHyperlinkColumn>
                 <DataGridTextColumn Header="Rank" Binding="{Binding Rank}" Width="Auto"/>
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="4*"/>
-                <DataGridTextColumn Header="Team" Binding="{Binding Team}" Width="1*" IsReadOnly="True"/>
+
+                <DataGridComboBoxColumn Header="Team"
+                                        Width="2*"
+                                        ItemsSource="{Binding Source={x:Static local:Deliverables.TeamsCollection}}"
+                                        SelectedValueBinding="{Binding Team}">
+                    <DataGridComboBoxColumn.EditingElementStyle>
+                        <Style TargetType="{x:Type ComboBox}">
+                            <EventSetter Event="SelectionChanged"
+                                         Handler="TeamsComboBox_SelectionChanged" />
+                        </Style>
+                        
+                    </DataGridComboBoxColumn.EditingElementStyle>
+                </DataGridComboBoxColumn>
+
                 <DataGridTextColumn Header="PMOwner" Binding="{Binding PMOwner}" Width="1*" IsReadOnly="True" Visibility="Hidden" x:Name="PMOwnerHeader"/>
                 <DataGridTextColumn Header="CS1" Binding="{Binding CustomString1}" Width="1*" Visibility="Hidden" x:Name="CustomString1Header"/>
                 <DataGridTextColumn Header="CS2" Binding="{Binding CustomString2}" Width="1*" Visibility="Hidden" x:Name="CustomString2Header"/>
