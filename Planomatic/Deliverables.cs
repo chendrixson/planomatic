@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Windows;
 
 namespace Planomatic
 {
@@ -102,6 +103,7 @@ namespace Planomatic
     public class Deliverable : INotifyPropertyChanged, IComparable<Deliverable> ,IEquatable<Deliverable>
     {
         private int _id;
+        private bool _isHidden = false;
         private string _title;
         private Nullable<int> _rank;
         private string _team;
@@ -162,6 +164,19 @@ namespace Planomatic
             {
                 //Red!
                 SumColor = "#FFE75B5B";
+            }
+        }
+
+        public bool IsHidden
+        {
+            get { return _isHidden; }
+            set
+            {
+                if (value != _isHidden)
+                {
+                    _isHidden = value;
+                    NotifyPropertyChanged("IsHidden");
+                }
             }
         }
 
@@ -767,8 +782,6 @@ namespace Planomatic
 
         void RedoGroups()
         {
-            AllGroups.Clear();
-
             // Build up the groups
             var groupHash = new Dictionary<string, DeliverableGroup>();
 
@@ -823,10 +836,15 @@ namespace Planomatic
                 }
             }
 
-            foreach (DeliverableGroup g in groupHash.Values)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                AllGroups.Add(g);
-            }
+                AllGroups.Clear();
+                foreach (DeliverableGroup g in groupHash.Values)
+                {
+                    AllGroups.Add(g);
+                }
+            });
+
         }
 
         public async Task<int> Update()

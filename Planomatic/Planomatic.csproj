@@ -221,6 +221,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters.cs" />
     <Compile Include="CS1Page.xaml.cs">
       <DependentUpon>CS1Page.xaml</DependentUpon>
     </Compile>

@@ -10,7 +10,26 @@
       Background="{DynamicResource MaterialDesignPaper}"
       FontFamily="{DynamicResource MaterialDesignFont}"
       Title="DeliverablesPage">
+    <Page.Resources>
+        <local:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
+        <local:HiddenConverter x:Key="HiddenConverter" />
+    </Page.Resources>
     <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding Path=AllItemsView.Count, Converter={StaticResource IntToVisibilityConverter}}">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Search Title:" VerticalAlignment="Center" />
+                <TextBox MinWidth="150" VerticalAlignment="Center"
+                         x:Name="SearchTextBox" TextChanged="SearchTextBox_TextChanged" />
+                <Label Content="Deliverable Count:" Margin="20,0,0,0" VerticalAlignment="Center" />
+                <TextBlock x:Name="SearchCountTextBlock" VerticalAlignment="Center" FontWeight="Bold" Text="0" />
+                <Label Content="out of:" VerticalAlignment="Center" />
+                <TextBlock VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Path=AllItemsView.Count}" />
+
+            </StackPanel>
+        </StackPanel>
 
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <StackPanel Orientation="Horizontal">
@@ -88,6 +107,11 @@
                     <Setter Property="Background"
                             Value="Transparent" />
                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsHidden, Converter={StaticResource HiddenConverter}}"
+                                        Value="True">
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
+                        </DataTrigger>
                         <Trigger Property="ItemsControl.AlternationIndex"
                                  Value="0">
                             <Setter Property="Background"
@@ -124,7 +148,6 @@
                                          IsReadOnly="True">
                     <DataGridHyperlinkColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-
                             <EventSetter Event="Hyperlink.Click"
                                          Handler="Hyperlink_RequestNavigate" />
                         </Style>

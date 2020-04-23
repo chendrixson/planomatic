@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace Planomatic
 {
@@ -9,11 +11,15 @@ namespace Planomatic
     /// </summary>
     public partial class DeliverablesPage : Page
     {
+        private DispatcherTimer _searchTimer = new DispatcherTimer();
+
         public DeliverablesPage()
         {
             InitializeComponent();
 
-            AllDeliverableList.DataContext = myApp().DeliverableList;
+            this.DataContext = myApp().DeliverableList;
+            _searchTimer.Tick += new EventHandler(OnSearchTimerTick);
+            _searchTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
         }
 
         public Config myConfig()
@@ -39,6 +45,8 @@ namespace Planomatic
 
             myConfig().RefreshingItems = false;
             RefreshButton.IsEnabled = true;
+
+            SearchCountTextBlock.Text = myApp().DeliverableList.AllItems.Count.ToString();
         }
 
         private void Resort_Click(object sender, RoutedEventArgs e)
@@ -143,6 +151,44 @@ namespace Planomatic
         private void ShowPMOwner_Unchecked(object sender, RoutedEventArgs e)
         {
             PMOwnerHeader.Visibility = Visibility.Hidden;
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _searchTimer.Stop();
+            _searchTimer.Start();
+        }
+
+        private void OnSearchTimerTick(object sender, EventArgs e)
+        {
+            _searchTimer.Stop();
+            Search(SearchTextBox.Text);
+        }
+
+        private void Search(string searchText)
+        {
+            int showCount = 0;
+            Task.Run(() =>
+            {
+                // Execute search on a non-UI thread
+                foreach (Deliverable d in myApp().DeliverableList.AllItemsView)
+                {
+                    if (d.Title.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) != -1)
+                    {
+                        d.IsHidden = false;
+                        showCount++;
+                    }
+                    else
+                    {
+                        d.IsHidden = true;
+                    }
+                }
+
+                Dispatcher.Invoke(() =>
+                {
+                    SearchCountTextBlock.Text = showCount.ToString();
+                });
+            });
         }
     }
 }
