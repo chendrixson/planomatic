@@ -205,6 +205,8 @@ namespace Planomatic
 
         public string AreaPath { get; set; }
 
+        public bool AreaPathModified { get; set; }
+
         public string Team
         {
             get { return _team; }
@@ -427,9 +429,18 @@ namespace Planomatic
 
             TeamsCollection.Clear();
             TeamsCollection.Add("<unmapped>"); // Need to add <unmapped> to make this value legal.
+
+            // Set TeamsRootNode base on RootNode
+            // Ex. If team nodes are APT\A, APT\B - RootNode can be: APT or A or B (user choice)
+            // but Teams root node will always be APT
+            c.TeamsRootNode = c.RootNode;
             foreach (TeamConfig t in myConfig().Teams)
             {
                 TeamsCollection.Add(t.GroupName);
+                if (c.RootNode.Contains(t.GroupName))
+                {
+                    c.TeamsRootNode = c.RootNode.Substring(0, c.RootNode.IndexOf(t.GroupName));
+                }
             }
         }
 
@@ -716,17 +727,15 @@ namespace Planomatic
                     // Map the team to anything that matches the substring
                     if (item.ContainsKey(_ado.KnownFields[11]))
                     {
-                        string itemAreaPath = item[_ado.KnownFields[11]].ToString();
+                        d.AreaPath = item[_ado.KnownFields[11]].ToString();
 
                         // Find which team
                         d.Team = "<unmapped>";
 
                         foreach (TeamConfig t in myConfig().Teams)
                         {
-                            if (itemAreaPath.Contains(t.GroupName))
+                            if (d.AreaPath.Contains(t.GroupName))
                             {
-                                // To allow changing area path, We only consider area path up to the group name, as sub nodes can't be moved.
-                                d.AreaPath = itemAreaPath.Substring(0, itemAreaPath.IndexOf(t.GroupName) + t.GroupName.Length);
                                 d.Team = t.GroupName;
                                 break;
                             }
@@ -856,8 +865,7 @@ namespace Planomatic
                         newItem[_ado.KnownFields[5]] = d.RemainingDevDays;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(d.AreaPath) &&
-                        !string.Equals(d.Team, "<unmapped>", StringComparison.OrdinalIgnoreCase))
+                    if (d.AreaPathModified)
                     {
                         newItem[_ado.KnownFields[11]] = d.AreaPath;
                     }

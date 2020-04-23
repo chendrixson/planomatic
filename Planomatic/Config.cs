@@ -468,6 +468,14 @@ namespace Planomatic
             }
         }
 
+        /// <summary>
+        /// Teams root node is used to capture the parent of all team nodes
+        /// </summary>
+        public string TeamsRootNode { get; set; }
+
+        /// <summary>
+        /// Root node is the user configured root node (can be also one of the team nodes)
+        /// </summary>
         public string RootNode
         {
             get { return _rootNode; }

@@ -53,7 +53,34 @@
 
         <DataGrid ItemsSource="{Binding AllItemsView}" AutoGenerateColumns="False"
                   CanUserAddRows="False" x:Name="AllDeliverableList" CanUserSortColumns="False"
-                  AlternationCount ="2" HorizontalScrollBarVisibility="Visible">
+                  AlternationCount ="2">
+
+            <!-- Data Grid Cell Style -->
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Padding"
+                            Value="10" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                <Border Padding="{TemplateBinding Padding}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        Background="{TemplateBinding Background}"
+                                        SnapsToDevicePixels="True">
+                                    <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="Silver" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
 
             <!-- Define the alternating rows coloring -->
             <DataGrid.RowStyle>
@@ -81,9 +108,9 @@
                         <Trigger Property="IsSelected"
                                  Value="true">
                             <Setter Property="Background"
-                                    Value="Transparent" />
+                                    Value="#CCDAFF" />
                             <Setter Property="Foreground"
-                                    Value="Transparent" />
+                                    Value="#CCDAFF" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>

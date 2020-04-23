@@ -99,8 +99,9 @@ namespace Planomatic
             // For building full area path - We assume that all teams are sub node of root node
             myApp().UpdateStatus($"Team Area path changed, was: {prevTeam}, now: {newTeam}");
 
-            selectedDeliverableItem.AreaPath = $@"{myConfig().RootNode}\{newTeam}";
             selectedDeliverableItem.Team = newTeam;
+            selectedDeliverableItem.AreaPath = $@"{myConfig().TeamsRootNode}\{newTeam}";
+            selectedDeliverableItem.AreaPathModified = true;
             selectedDeliverableItem.Mod = true;
         }
 
