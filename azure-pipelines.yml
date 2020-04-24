@@ -26,13 +26,16 @@ steps:
     restoreSolution: '$(solution)'
 
 - powershell: |
-   [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
-   $path = "PlanomaticPackage/Package.appxmanifest"
-   $doc = [System.Xml.Linq.XDocument]::Load($path)
-   $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
-   $doc.Root.Element($xName).Attribute("Version").Value = "$(major).$(minor).$(build).$(revision)"
-   $doc.Save($path)
+    [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
+    $path = "PlanomaticPackage/Package.appxmanifest"
+    $doc = [System.Xml.Linq.XDocument]::Load($path)
+    $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
+    $doc.Root.Element($xName).Attribute("Version").Value = "$(major).$(minor).$(build).$(revision)"
+    $doc.Save($path)
   displayName: 'Version Package Manifest'
+
+- powershell: |
+   ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(build).$(revision)' -replace '<msix_name>','Planomatic_$(major).$(minor).$(build).$(revision).msix') | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano.appinstaller
 
 - task: MSBuild@1
   inputs:
