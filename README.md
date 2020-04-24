@@ -7,3 +7,7 @@ Tool to help planning against Microsoft's internal Azure Dev Ops instance.  For 
 
 For more information and a MSIX install, check it out here!
 http://aka.ms/planomatic
+
+### Builds
+[Master Build Pipeline](https://chendrixson.visualstudio.com/PlanoBuild/_build?definitionId=7&_a=summary&branchFilter=4)
+
