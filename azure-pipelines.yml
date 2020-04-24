@@ -39,7 +39,7 @@ steps:
     solution: $(solution)
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
-    msbuildArguments: '/p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\Planomatic$(major).$(minor).$(build).$(revision).msix /p:AppxPackageSigningEnabled=false'
+    msbuildArguments: '/p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\Planomatic_$(major).$(minor).$(build).$(revision).msix /p:AppxPackageSigningEnabled=false'
   displayName: 'Build and Package'
 
 - task: DownloadSecureFile@1
