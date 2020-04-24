@@ -29,7 +29,7 @@ steps:
     $path = "PlanomaticPackage/Package.appxmanifest"
     $doc = [System.Xml.Linq.XDocument]::Load($path)
     $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
-    $doc.Root.Element($xName).Attribute("Version").Value = "$(major).$(minor)$(revision).0"
+    $doc.Root.Element($xName).Attribute("Version").Value = "$(major).$(minor).$(revision).0"
     $doc.Save($path)
   displayName: 'Version Package Manifest'
 
