@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Planomatic
 {
@@ -25,6 +13,9 @@ namespace Planomatic
         DeliverablesPage _deliverablePage;
         CS1Page _cs1Page;
         TeamViewPage _teamViewPage;
+        TimeForBreakPage _timeForBreakViewPage;
+        Page _lastVisitedPage;
+        bool _timeForBreakIsOn = false;
         ScaleTransform _zoomTransform = new ScaleTransform();
 
         public ConfigPage CurrentConfigPage
@@ -65,6 +56,36 @@ namespace Planomatic
         private void Config_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Content = _configPage;
+        }
+
+        private void TimeForBreak_Click(object sender, RoutedEventArgs e)
+        {
+            if (_timeForBreakIsOn)
+            {
+                TimeForBreakPageUnloadedCallback();
+            }
+            else
+            {
+                if (_timeForBreakViewPage == null)
+                {
+                    _timeForBreakViewPage = new TimeForBreakPage(TimeForBreakPageUnloadedCallback);
+                }
+
+                _lastVisitedPage = MainFrame.Content as Page;
+                MainFrame.Content = _timeForBreakViewPage;
+                TimeForBreakButton.Content = "Exit Time For Break";
+                _timeForBreakIsOn = true;
+            }
+        }
+
+        private void TimeForBreakPageUnloadedCallback()
+        {
+            if (_timeForBreakIsOn)
+            {
+                MainFrame.Content = _lastVisitedPage;
+                TimeForBreakButton.Content = "Time For Break";
+                _timeForBreakIsOn = false;
+            }
         }
 
         public void UpdateStatus(string status)

@@ -11,6 +11,8 @@
       FontFamily="{DynamicResource MaterialDesignFont}"
       Title="DeliverablesPage">
     <Page.Resources>
+        <local:StringConverter x:Key="StringConverter" />
+        <local:IntToUriConverter x:Key="IntToUriConverter" />
         <local:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
         <local:HiddenConverter x:Key="HiddenConverter" />
     </Page.Resources>
@@ -144,7 +146,7 @@
             <DataGrid.Columns>
                 <DataGridHyperlinkColumn Header="ID"
                                          Width="Auto"
-                                         Binding="{Binding Id}"
+                                         Binding="{Binding Id, Converter={StaticResource IntToUriConverter}}"
                                          IsReadOnly="True">
                     <DataGridHyperlinkColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -178,7 +180,7 @@
                 <DataGridTextColumn Header="Sum" Binding="{Binding SumEstimate}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="TextBlock.Background" Value="{Binding SumColor}"/>
+                            <Setter Property="TextBlock.Background" Value="{Binding SumColor, Converter={StaticResource StringConverter}}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>

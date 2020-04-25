@@ -22,23 +22,24 @@
         </Grid.ColumnDefinitions>
 
             <DockPanel Background="{DynamicResource PrimaryHueLightBrush}">
-            <ToggleButton x:Name="MenuPaneToggle" Style="{StaticResource MaterialDesignHamburgerToggleButton}" DockPanel.Dock="Top"  HorizontalAlignment="Right" Margin="20" IsChecked="True" Click="MenuPaneToggle_Click"/>
+                <ToggleButton x:Name="MenuPaneToggle" Style="{StaticResource MaterialDesignHamburgerToggleButton}" DockPanel.Dock="Top"  HorizontalAlignment="Right" Margin="20" IsChecked="True" Click="MenuPaneToggle_Click"/>
                 <Button DockPanel.Dock="Top" Click="Deliverables_Click" Margin="20,10,20,10">Deliverables</Button>
-            <Button DockPanel.Dock="Top" Click="CS1_Click" Margin="20,10,20,10">CS1 View</Button>
-            <Button DockPanel.Dock="Top" Click="TeamView_Click" Margin="20,10,20,10">Team View</Button>
+                <Button DockPanel.Dock="Top" Click="CS1_Click" Margin="20,10,20,10">CS1 View</Button>
+                <Button DockPanel.Dock="Top" Click="TeamView_Click" Margin="20,10,20,10">Team View</Button>
                 <Button DockPanel.Dock="Top" Click="Config_Click" Margin="20,10,20,10">Config</Button>
-            <!--<TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" x:Name="Version">v</TextBlock>-->
-            <StackPanel VerticalAlignment="Bottom">
-                <Slider x:Name="ZoomSlider" Margin="20,10,20,10" Minimum="0" Maximum="400" Value="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Zoom" ValueChanged="Slider_ValueChanged"></Slider>
-                <Label x:Name="ZoomSliderLabel" HorizontalAlignment="Center" Padding="0,0,0,10">Zoom</Label>
-            </StackPanel>
-        </DockPanel>
+                <Button DockPanel.Dock="Top" Click="TimeForBreak_Click" x:Name="TimeForBreakButton" Margin="20,10,20,10">Time For Break</Button>
+                <!--<TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" x:Name="Version">v</TextBlock>-->
+                <StackPanel VerticalAlignment="Bottom">
+                    <Slider x:Name="ZoomSlider" Margin="20,10,20,10" Minimum="0" Maximum="400" Value="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Zoom" ValueChanged="Slider_ValueChanged"></Slider>
+                    <Label x:Name="ZoomSliderLabel" HorizontalAlignment="Center" Padding="0,0,0,10">Zoom</Label>
+                </StackPanel>
+            </DockPanel>
 
-        <DockPanel Grid.Column="1" LastChildFill="True">
-            <ProgressBar x:Name="StatusProgress" DockPanel.Dock="Bottom" IsIndeterminate="False" />
-            <Label DockPanel.Dock="Bottom" x:Name="StatusText" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueLightBrush}">Status</Label>
-            <Frame Margin="10" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>
-        </DockPanel>
+            <DockPanel Grid.Column="1" LastChildFill="True">
+                <ProgressBar x:Name="StatusProgress" DockPanel.Dock="Bottom" IsIndeterminate="False" />
+                <Label DockPanel.Dock="Bottom" x:Name="StatusText" Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueLightBrush}">Status</Label>
+                <Frame Margin="10" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>
+            </DockPanel>
             
         </Grid>
 </Window>
