@@ -29,7 +29,10 @@ namespace Planomatic
             _timeForBreakPageUnloadedCallback = timeForBreakPageUnloadedCallback;
 
             string videoFileName = "Workout.mp4";
-            this._videoFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), videoFileName);
+
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            this._videoFilePath = Path.Combine(tempDirectory, videoFileName);
             CopyResourceFileIfApplicable(videoFileName, _videoFilePath);
 
             VideoPlayer.Open(new Uri(_videoFilePath, UriKind.Absolute));
