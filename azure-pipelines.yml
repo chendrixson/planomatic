@@ -58,7 +58,7 @@ steps:
     Destination: 'AzureBlob'
     storage: 'planomaticstorage'
     ContainerName: '$web'
-    BlobPrefix: 'testprefix'/
+    BlobPrefix: 'testprefix'
     
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
