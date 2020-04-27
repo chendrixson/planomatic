@@ -15,6 +15,7 @@ variables:
   buildConfiguration: 'Release'
   major: 1
   minor: 1
+  build: 0
   revision: $[counter('rev', 0)]
 
 steps:
@@ -25,23 +26,20 @@ steps:
     restoreSolution: '$(solution)'
 
 - powershell: |
-    [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
-    $path = "PlanomaticPackage/Package.appxmanifest"
-    $doc = [System.Xml.Linq.XDocument]::Load($path)
-    $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
-    $doc.Root.Element($xName).Attribute("Version").Value = "$(major).$(minor).$(revision).0"
-    $doc.Save($path)
+   [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
+   $path = "PlanomaticPackage/Package.appxmanifest"
+   $doc = [System.Xml.Linq.XDocument]::Load($path)
+   $xName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
+   $doc.Root.Element($xName).Attribute("Version").Value = "$(major).$(minor).$(build).$(revision)"
+   $doc.Save($path)
   displayName: 'Version Package Manifest'
-
-- powershell: |
-   ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0' -replace '<msix_name>','Planomatic_$(major).$(minor).$(revision).0.msix') | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano.appinstaller
 
 - task: MSBuild@1
   inputs:
     solution: $(solution)
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
-    msbuildArguments: '/p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\Planomatic_$(major).$(minor).$(revision).0.msix /p:AppxPackageSigningEnabled=false'
+    msbuildArguments: '/p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\Planomatic.msix /p:AppxPackageSigningEnabled=false'
   displayName: 'Build and Package'
 
 - task: DownloadSecureFile@1
@@ -50,12 +48,8 @@ steps:
   displayName: 'Download Secure PFX File'
 
 - script: '"C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool"
-    sign /fd SHA256 /f $(Agent.TempDirectory)/certificate.pfx /p 1234 $(Build.ArtifactStagingDirectory)/Planomatic_$(major).$(minor).$(revision).0.msix'
+    sign /fd SHA256 /f $(Agent.TempDirectory)/certificate.pfx /p 1234 Planomatic.msix'
   displayName: 'Sign MSIX Package'
-
-  
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
 
 - task: AzureFileCopy@4
   inputs:
@@ -64,4 +58,6 @@ steps:
     Destination: 'AzureBlob'
     storage: 'planomaticstorage'
     ContainerName: '$web'
-    BlobPrefix: 'testprefix'
+    
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
