@@ -53,6 +53,15 @@ steps:
     sign /fd SHA256 /f $(Agent.TempDirectory)/certificate.pfx /p 1234 $(Build.ArtifactStagingDirectory)/Planomatic_$(major).$(minor).$(revision).0.msix'
   displayName: 'Sign MSIX Package'
 
-   
+  
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
+
+- task: AzureFileCopy@4
+  inputs:
+    SourcePath: '$(Build.ArtifactStagingDirectory)\*'
+    azureSubscription: 'Windows Azure MSDN - Visual Studio Ultimate(43691145-00b4-4e96-b938-c23ab71b1211)'
+    Destination: 'AzureBlob'
+    storage: 'planomaticstorage'
+    ContainerName: '$web'
+    BlobPrefix: 'testprefix'
