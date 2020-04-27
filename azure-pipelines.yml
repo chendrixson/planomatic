@@ -48,8 +48,17 @@ steps:
   displayName: 'Download Secure PFX File'
 
 - script: '"C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool"
-    sign /fd SHA256 /f $(Agent.TempDirectory)/certificate.pfx /p 1234 $(Build.ArtifactStagingDirectory)/Planomatic.msix'
+    sign /fd SHA256 /f $(Agent.TempDirectory)/certificate.pfx /p 1234 Planomatic.msix'
   displayName: 'Sign MSIX Package'
 
+- task: AzureFileCopy@4
+  inputs:
+    SourcePath: '$(Build.ArtifactStagingDirectory)\*'
+    azureSubscription: 'Windows Azure MSDN - Visual Studio Ultimate(43691145-00b4-4e96-b938-c23ab71b1211)'
+    Destination: 'AzureBlob'
+    storage: 'planomaticstorage'
+    ContainerName: '$web'
+    BlobPrefix: 'testprefix'/
+    
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
