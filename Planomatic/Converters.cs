@@ -5,6 +5,27 @@ using System.Windows.Data;
 
 namespace Planomatic
 {
+    public class IntToUriConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int? valueInt = (int?)value;
+            if (valueInt == null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                return valueInt.ToString();
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class IntToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -31,6 +52,19 @@ namespace Planomatic
         {
             throw new NotImplementedException();
         }
+    }
 
+    public class StringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string str = (string)value;
+            return str;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
