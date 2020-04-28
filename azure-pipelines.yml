@@ -59,8 +59,7 @@ steps:
 - task: AzureFileCopy@4
   inputs:
     SourcePath: '$(Build.ArtifactStagingDirectory)\*'
-    azureSubscription: 'planomaticstorage-connection'
+    azureSubscription: 'Windows Azure MSDN - Visual Studio Ultimate(43691145-00b4-4e96-b938-c23ab71b1211)'
     Destination: 'AzureBlob'
     storage: 'planomaticstorage'
-    ContainerName: 'test'
-
+    ContainerName: '$web'
