@@ -12,7 +12,7 @@
       Title="DeliverablesPage">
     <Page.Resources>
         <local:StringConverter x:Key="StringConverter" />
-        <local:IntToUriConverter x:Key="IntToUriConverter" />
+        <local:NullableIntToIntConverter x:Key="NullableIntToIntConverter" />
         <local:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
         <local:HiddenConverter x:Key="HiddenConverter" />
     </Page.Resources>
@@ -146,7 +146,7 @@
             <DataGrid.Columns>
                 <DataGridHyperlinkColumn Header="ID"
                                          Width="Auto"
-                                         Binding="{Binding Id, Converter={StaticResource IntToUriConverter}}"
+                                         Binding="{Binding Id, Converter={StaticResource NullableIntToIntConverter}}"
                                          IsReadOnly="True">
                     <DataGridHyperlinkColumn.ElementStyle>
                         <Style TargetType="TextBlock">
