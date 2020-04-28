@@ -5,18 +5,18 @@ using System.Windows.Data;
 
 namespace Planomatic
 {
-    public class IntToUriConverter : IValueConverter
+    public class NullableIntToIntConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int? valueInt = (int?)value;
             if (valueInt == null)
             {
-                return string.Empty;
+                return 0;
             }
             else
             {
-                return valueInt.ToString();
+                return valueInt;
             }
         }
 
