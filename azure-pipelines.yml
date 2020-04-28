@@ -62,5 +62,5 @@ steps:
     azureSubscription: 'Windows Azure MSDN - Visual Studio Ultimate(43691145-00b4-4e96-b938-c23ab71b1211)'
     Destination: 'AzureBlob'
     storage: 'planomaticstorage'
-    ContainerName: '$web'
+    ContainerName: 'test'
 
