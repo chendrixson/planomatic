@@ -56,7 +56,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
 
-- task: AzureFileCopy@4
+- task: AzureFileCopy@3
   inputs:
     SourcePath: '$(Build.ArtifactStagingDirectory)\*'
     azureSubscription: 'Windows Azure MSDN - Visual Studio Ultimate(43691145-00b4-4e96-b938-c23ab71b1211)'
