@@ -63,4 +63,4 @@ steps:
     azureSubscription: 'planostorage'
     Destination: 'AzureBlob'
     storage: 'planomaticstorage'
-    ContainerName: '$web'
+    ContainerName: '$web\branch'
