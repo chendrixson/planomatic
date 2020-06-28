@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
-using System.Runtime.Serialization.Json;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Serialization;
-
 using System.ComponentModel;
 using System.Windows.Data;
-
 using Microsoft.Win32;
 
 namespace Planomatic
@@ -231,7 +225,7 @@ namespace Planomatic
                 if (value != _iteration2)
                 {
                     _iteration2 = value;
-                    NotifyPropertyChanged("Iteration3");
+                    NotifyPropertyChanged("Iteration2");
                 }
             }
         }
@@ -368,7 +362,6 @@ namespace Planomatic
 
         public Config()
         {
-
         }
 
         public Config(string command)
@@ -626,16 +619,8 @@ namespace Planomatic
             get { return _teamSumRank; }
             set
             {
-                if(value != _teamSumRank)
-                {
-                    _teamSumRank = value;
-                    NotifyPropertyChanged("TeamSumRank");
-
-                    if (myApp() != null)
-                    {
-                        myApp().DeliverableList.RecalcSums();
-                    }
-                }
+                _teamSumRank = value;
+                NotifyPropertyChanged("TeamSumRank");
             }
         }
 
@@ -726,12 +711,12 @@ namespace Planomatic
             myApp().UpdateStatus($"Saved file {configFilename}");
         }
 
-        public bool LoadConfig(string configFilename)
+        public bool LoadConfig(string configFilePath)
         {
             try
             {
                 var serializer = new XmlSerializer(typeof(Config));
-                var reader = new StreamReader(configFilename);
+                var reader = new StreamReader(configFilePath);
 
                 Config newConfig = (Config)serializer.Deserialize(reader);
 
@@ -757,19 +742,19 @@ namespace Planomatic
 
                 UpdateCapacity();
 
-                LastConfigFilename = configFilename;
+                LastConfigFilename = configFilePath;
                 _lastConfigSet = true;
 
                 UpdateStoredLastConfig();
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Failed to deserialize from file " + configFilename);
+                Debug.WriteLine("Failed to deserialize from file " + configFilePath);
                 Debug.WriteLine(e.ToString());
                 return false;
             }
 
-            Debug.WriteLine("Successfully deserailized from file " + configFilename);
+            Debug.WriteLine("Successfully deserialized from file " + configFilePath);
             return true;
         }
     }

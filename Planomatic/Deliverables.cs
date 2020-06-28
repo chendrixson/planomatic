@@ -433,6 +433,7 @@ namespace Planomatic
         {
             return _myConfig;
         }
+
         private App myApp()
         {
             return (App)App.Current;

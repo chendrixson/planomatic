@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Diagnostics;
 using SWF = System.Windows.Forms;
 
@@ -144,7 +132,7 @@ namespace Planomatic
             myConfig().Save();
         }
 
-        private void LoadFrom_Click(object sender, RoutedEventArgs e)
+        private async void LoadFrom_Click(object sender, RoutedEventArgs e)
         {
             // Use the File dialog to get a path
             var fileDialog = new SWF.OpenFileDialog();
@@ -156,6 +144,7 @@ namespace Planomatic
             {
                 case SWF.DialogResult.OK:
                     myConfig().LoadConfig(fileDialog.FileName);
+                    await ((App)App.Current).DeliverableList.Refresh();
                     break;
 
                 default:
