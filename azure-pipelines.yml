@@ -62,5 +62,6 @@ steps:
     SourcePath: '$(Build.ArtifactStagingDirectory)\*'
     azureSubscription: 'planostorage'
     Destination: 'AzureBlob'
+    destinationFolder: 'branch\foo'
     storage: 'planomaticstorage'
-    ContainerName: '$web\branch'
+    ContainerName: '$web'
