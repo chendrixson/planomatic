@@ -3,7 +3,7 @@
 	Uri="https://planomaticstorage.z5.web.core.windows.net/<appinstaller_file>"
 	Version="<msix_version>" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
 	<MainPackage
-		Name="name>"
+		Name="<name>"
 		Version="<msix_version>"
 		Publisher="CN=Planomatic, O=Planomatic Project, C=US"
 		Uri="https://planomaticstorage.z5.web.core.windows.net/<msix_name>"
