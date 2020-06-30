@@ -3,7 +3,7 @@
 	Uri="https://planomaticstorage.z5.web.core.windows.net/plano.appinstaller"
 	Version="1.0.23.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
 	<MainPackage
-		Name="Planomatic"
+		Name="<display_name>"
 		Version="<msix_version>"
 		Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
 		Uri="https://planomaticstorage.z5.web.core.windows.net/<msix_name>"
