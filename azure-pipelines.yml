@@ -31,19 +31,25 @@ steps:
     $path = "PlanomaticPackage/Package.appxmanifest"
     $doc = [System.Xml.Linq.XDocument]::Load($path)
     $xIdentity = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
+    $xProperties = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Properties"
+    $xDisplayName = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}DisplayName"
+    $xApplications = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Applications"
+    $xApplication = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Application"
+    $xVisualElements = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/uap/windows10}VisualElements"
     $doc.Root.Element($xIdentity).Attribute("Version").Value = "$(major).$(minor).$(revision).0"
     $doc.Root.Element($xIdentity).Attribute("Name").Value = "Planomatic$(branchLabel)"
-    $doc.Root.Element([System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Properties"). `
-        Element([System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}DisplayName").Value = "Planomatic_$(branchLabel)"
+    $doc.Root.Element($xProperties).Element($xDisplayName).Value = "Planomatic_$(branchLabel)"
+    $doc.Root.Element($xApplications).Element($xApplication).Element($xVisualElements).Attribute("DisplayName").Value = "Planomatic_$(branchLabel)"
     $doc.Save($path)
-  displayName: 'Version and Branch Name Package Manifest'
+  displayName: 'Setting Version and Branch Name in Package Manifest'
 
 - powershell: |
    ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0' `
                                                          -replace '<msix_name>','Planomatic_$(branchLabel)_$(major).$(minor).$(revision).0.msix' `
+                                                         -replace '<appinstaller_file>','plano_$(branchLabel).appinstaller' `
                                                          -replace '<display_name>','Planomatic_$(branchLabel)') `
         | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano_$(branchLabel).appinstaller
-  displayName: 'Update Appinstaller file'
+  displayName: 'Updating Appinstaller file'
 
 - task: MSBuild@1
   inputs:
