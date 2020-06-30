@@ -47,7 +47,7 @@ steps:
    ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0' `
                                                          -replace '<msix_name>','Planomatic_$(branchLabel)_$(major).$(minor).$(revision).0.msix' `
                                                          -replace '<appinstaller_file>','plano_$(branchLabel).appinstaller' `
-                                                         -replace '<display_name>','Planomatic_$(branchLabel)') `
+                                                         -replace '<name>','Planomatic$(branchLabel)') `
         | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano_$(branchLabel).appinstaller
   displayName: 'Updating Appinstaller file'
 
