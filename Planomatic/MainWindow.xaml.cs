@@ -38,7 +38,7 @@ namespace Planomatic
             {
                 Windows.ApplicationModel.Package pkg = Windows.ApplicationModel.Package.Current;
                 var v = pkg.Id.Version;
-                VersionLabel.Content = "v: " + v.Major + "." + v.Minor + "." + v.Build;
+                VersionLabel.Content = "ver: " + v.Major + "." + v.Minor + "." + v.Build;
             }
             catch(System.Exception)
             {
