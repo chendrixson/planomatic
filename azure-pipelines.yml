@@ -20,6 +20,10 @@ variables:
   branchLabel: $(System.PullRequest.SourceBranch)
 
 steps:
+- powershell: |
+    echo "$(System.PullRequest.SourceBranch)"
+  displayName: 'Setting Build Label'
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
