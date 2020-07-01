@@ -1,0 +1,54 @@
+# .NET Desktop
+
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+trigger:
+  branches:
+   include:
+     - master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  major: 1
+  minor: 1
+  revision: $[counter('rev', 0)]
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- powershell: |
+    [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
+    $path = "PlanomaticPackage/Package.appxmanifest"
+    $doc = [System.Xml.Linq.XDocument]::Load($path)
+    $xIdentity = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Identity"
+    $doc.Root.Element($xIdentity).Attribute("Version").Value = "$(major).$(minor).$(revision).0"
+    $doc.Save($path)
+  displayName: 'Setting Version in Package Manifest'
+
+- powershell: |
+   ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0') `
+        | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano_$(branchLabel).appinstaller
+  displayName: 'Updating Appinstaller file'
+
+- task: MSBuild@1
+  inputs:
+    solution: $(solution)
+    platform: $(buildPlatform)
+    configuration: $(buildConfiguration)
+    msbuildArguments: '/p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\Planomatic_$(major).$(minor).$(revision).0.msix /p:AppxPackageSigningEnabled=false'
+  displayName: 'Build and Package'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+
