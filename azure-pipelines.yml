@@ -17,26 +17,27 @@ steps:
     restoreSolution: '$(solution)'
 
 - powershell: |
-    $sourceBranch = "$(Build.SourceBranch)";
+    $sourceBranch = "$(Build.SourceBranch)"
+    $branchLabel = "Main"
     Write-Host "##vso[task.setvariable variable=isMain;]false"
     if ($sourceBranch.endswith("master"))
     { 
       Write-Host "##vso[task.LogIssue type=warning;] This is a main build"
       Write-Host "##vso[task.setvariable variable=isMain;]true"
-      Write-Host "##vso[task.setvariable variable=branchLabel;]Main"
     }
     elseif ($sourceBranch.endswith("merge"))
     {
       Write-Host "##vso[task.LogIssue type=warning;] This is a PR build, use system.pr.sourcebranch"    
       Write-Host "##vso[task.LogIssue type=warning;] PR.SourceBrance is $(System.PullRequest.SourceBranch)"
-      Write-Host "##vso[task.setvariable variable=branchLabel;]$(System.PullRequest.SourceBranch)"
+      $branchLabel = "$(System.PullRequest.SourceBranch)"
     }
     else
     {
       Write-Host "##vso[task.LogIssue type=warning;] CI to a sub branch"    
       Write-Host "##vso[task.LogIssue type=warning;] SourceBranch is $(Build.SourceBranch)"
-      Write-Host "##vso[task.setvariable variable=branchLabel;]$(Build.SourceBranch)"
+      $branchLabel = "$(Build.SourceBranch)"
     }
+    Write-Host "##vso[task.setvariable variable=branchLabel;]$(branchLabel)"
     if($isMain)
     {
       Write-Host "##vso[task.setvariable variable=packageName;]Planomatic_$(major).$(minor).$(revision).0.msix"
