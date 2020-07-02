@@ -23,11 +23,25 @@ steps:
     restoreSolution: '$(solution)'
 
 - powershell: |
-    Write-Host  "##vso[task.LogIssue type=warning;] SourceBranch is $(Build.SourceBranch)"
-    Write-Host  "##vso[task.LogIssue type=warning;] PR.SourceBranc is $(System.PullRequest.SourceBranch)"
+    if ($(Build.SourceBranch).endswith("master"))
+    { 
+      Write-Host "##vso[task.LogIssue type=warning;] This is a master build"
+      Write-Host "##vso[task.setvariable variable=isMain;]true"
+    }
+    elseif ($(Build.SourceBranch).endswith("merge"))
+    {
+      Write-Host "##vso[task.LogIssue type=warning;] This is a PR build, use system.pr.sourcebranch"    
+      Write-Host "##vso[task.LogIssue type=warning;] PR.SourceBrance is $(System.PullRequest.SourceBranch)"
+    }
+    else
+    {
+      Write-Host "##vso[task.LogIssue type=warning;] CI to a sub branch"    
+      Write-Host "##vso[task.LogIssue type=warning;] SourceBranch is $(Build.SourceBranch)"
+    }
   displayName: 'Dump interesting variables'
 
 - powershell: |
+    Write-Host "##vso[task.LogIssue type=warning;] Is main is $(isMain)"
     [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
     $path = "PlanomaticPackage/Package.appxmanifest"
     $doc = [System.Xml.Linq.XDocument]::Load($path)
