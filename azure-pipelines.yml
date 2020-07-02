@@ -18,6 +18,7 @@ steps:
 
 - powershell: |
     $sourceBranch = "$(Build.SourceBranch)"
+    $branchLabel = "none"
     if ($sourceBranch.endswith("master"))
     { 
       $branchLabel = "Main"
@@ -44,7 +45,6 @@ steps:
   displayName: 'Setup Branch Label and Package Name'
 
 - powershell: |
-    Write-Host "##vso[task.LogIssue type=warning;] branchLabel is $(branchLabel)"
     [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
     $path = "PlanomaticPackage/Package.appxmanifest"
     $doc = [System.Xml.Linq.XDocument]::Load($path)
