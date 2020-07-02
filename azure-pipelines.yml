@@ -19,11 +19,9 @@ steps:
 - powershell: |
     $sourceBranch = "$(Build.SourceBranch)"
     $branchLabel = "Main"
-    Write-Host "##vso[task.setvariable variable=isMain;]false"
     if ($sourceBranch.endswith("master"))
     { 
       Write-Host "##vso[task.LogIssue type=warning;] This is a main build"
-      Write-Host "##vso[task.setvariable variable=isMain;]true"
     }
     elseif ($sourceBranch.endswith("merge"))
     {
@@ -38,18 +36,18 @@ steps:
       $branchLabel = "$(Build.SourceBranch)"
     }
     Write-Host "##vso[task.setvariable variable=branchLabel;]$branchLabel"
-    if($isMain)
+    if($branchLabel -eq 'Main')
     {
-      Write-Host "##vso[task.setvariable variable=packageName;]Planomatic_$(major).$(minor).$(revision).0.msix"
+      $packageName = "Planomatic_$(major).$(minor).$(revision).0.msix"
     }
     else
     {
-      Write-Host "##vso[task.setvariable variable=packageName;]Planomatic_$branchLabel_$(major).$(minor).$(revision).0.msix"
+      $packageName = "Planomatic_$branchLabel_$(major).$(minor).$(revision).0.msix"
     }
+    Write-Host "##vso[task.setvariable variable=packageName;]$packageName"
   displayName: 'Setup Branch Label and Package Name'
 
 - powershell: |
-    Write-Host "##vso[task.LogIssue type=warning;] isMain is $(isMain)"
     Write-Host "##vso[task.LogIssue type=warning;] branchLabel is $(branchLabel)"
     [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
     $path = "PlanomaticPackage/Package.appxmanifest"
@@ -61,7 +59,7 @@ steps:
     $xApplication = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Application"
     $xVisualElements = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/uap/windows10}VisualElements"
     $doc.Root.Element($xIdentity).Attribute("Version").Value = "$(major).$(minor).$(revision).0"
-    if (-not $isMain)
+    if ("$(branchLabel)" -ne 'Main')
     {
       $doc.Root.Element($xIdentity).Attribute("Name").Value = "Planomatic$(branchLabel)"
       $doc.Root.Element($xProperties).Element($xDisplayName).Value = "Planomatic_$(branchLabel)"
@@ -71,7 +69,7 @@ steps:
   displayName: 'Setting Version and Branch Name in Package Manifest'
 
 - powershell: |
-    if ($isMain)
+    if ("$(branchLabel)" -eq 'Main')
     {
       ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0' `
                                                          -replace '<msix_name>','$(packageName)' `
