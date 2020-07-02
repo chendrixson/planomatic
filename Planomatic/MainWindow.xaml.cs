@@ -17,7 +17,7 @@ namespace Planomatic
         Page _lastVisitedPage;
         bool _timeForBreakIsOn = false;
         ScaleTransform _zoomTransform = new ScaleTransform();
-
+        
         public ConfigPage CurrentConfigPage
         {
             get { return _configPage; }
@@ -33,8 +33,17 @@ namespace Planomatic
 
             InitializeComponent();
 
-            // grab the version
-            
+            // grab the version, if we're packaged up
+            try
+            {
+                Windows.ApplicationModel.Package pkg = Windows.ApplicationModel.Package.Current;
+                var v = pkg.Id.Version;
+                VersionLabel.Content = "ver: " + v.Major + "." + v.Minor + "." + v.Build;
+            }
+            catch(System.Exception)
+            {
+                VersionLabel.Content = "Unpackaged";
+            }
         }
         private App myApp()
         {
@@ -142,6 +151,7 @@ namespace Planomatic
                 MainFrameColumn.Width = new GridLength(1, GridUnitType.Star);
                 ZoomSlider.Visibility = Visibility.Hidden;
                 ZoomSliderLabel.Visibility = Visibility.Hidden;
+                VersionLabel.Visibility = Visibility.Hidden;
             }
             else
             {
@@ -152,6 +162,7 @@ namespace Planomatic
                 MainFrameColumn.Width = new GridLength(4, GridUnitType.Star);
                 ZoomSlider.Visibility = Visibility.Visible;
                 ZoomSliderLabel.Visibility = Visibility.Visible;
+                VersionLabel.Visibility = Visibility.Visible;
             }
 
         }

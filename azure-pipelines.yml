@@ -18,22 +18,19 @@ steps:
 
 - powershell: |
     $sourceBranch = "$(Build.SourceBranch)"
-    $branchLabel = "Main"
+    $branchLabel = "none"
     if ($sourceBranch.endswith("master"))
     { 
-      Write-Host "##vso[task.LogIssue type=warning;] This is a main build"
+      $branchLabel = "Main"
     }
     elseif ($sourceBranch.endswith("merge"))
     {
-      Write-Host "##vso[task.LogIssue type=warning;] This is a PR build, use system.pr.sourcebranch"    
-      Write-Host "##vso[task.LogIssue type=warning;] PR.SourceBrance is $(System.PullRequest.SourceBranch)"
       $branchLabel = "$(System.PullRequest.SourceBranch)"
     }
     else
     {
-      Write-Host "##vso[task.LogIssue type=warning;] CI to a sub branch"    
-      Write-Host "##vso[task.LogIssue type=warning;] SourceBranch is $(Build.SourceBranch)"
       $branchLabel = "$(Build.SourceBranch)"
+      $branchLabel = $branchLabel.substring($branchLabel.lastIndexOf('/') + 1)
     }
     Write-Host "##vso[task.setvariable variable=branchLabel;]$branchLabel"
     if($branchLabel -eq 'Main')
@@ -42,13 +39,13 @@ steps:
     }
     else
     {
-      $packageName = "Planomatic_$branchLabel_$(major).$(minor).$(revision).0.msix"
+      $packageName = "Planomatic_" + $branchLabel
+      $packageName += "_$(major).$(minor).$(revision).0.msix"
     }
     Write-Host "##vso[task.setvariable variable=packageName;]$packageName"
   displayName: 'Setup Branch Label and Package Name'
 
 - powershell: |
-    Write-Host "##vso[task.LogIssue type=warning;] branchLabel is $(branchLabel)"
     [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
     $path = "PlanomaticPackage/Package.appxmanifest"
     $doc = [System.Xml.Linq.XDocument]::Load($path)
