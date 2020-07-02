@@ -1,16 +1,3 @@
-# .NET Desktop
-
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
-
-trigger: none
-
-pr:
-  branches:
-   exclude:
-     - master
-
 pool:
   vmImage: 'windows-latest'
 
@@ -30,6 +17,38 @@ steps:
     restoreSolution: '$(solution)'
 
 - powershell: |
+    $sourceBranch = "$(Build.SourceBranch)"
+    $branchLabel = "Main"
+    if ($sourceBranch.endswith("master"))
+    { 
+      Write-Host "##vso[task.LogIssue type=warning;] This is a main build"
+    }
+    elseif ($sourceBranch.endswith("merge"))
+    {
+      Write-Host "##vso[task.LogIssue type=warning;] This is a PR build, use system.pr.sourcebranch"    
+      Write-Host "##vso[task.LogIssue type=warning;] PR.SourceBrance is $(System.PullRequest.SourceBranch)"
+      $branchLabel = "$(System.PullRequest.SourceBranch)"
+    }
+    else
+    {
+      Write-Host "##vso[task.LogIssue type=warning;] CI to a sub branch"    
+      Write-Host "##vso[task.LogIssue type=warning;] SourceBranch is $(Build.SourceBranch)"
+      $branchLabel = "$(Build.SourceBranch)"
+    }
+    Write-Host "##vso[task.setvariable variable=branchLabel;]$branchLabel"
+    if($branchLabel -eq 'Main')
+    {
+      $packageName = "Planomatic_$(major).$(minor).$(revision).0.msix"
+    }
+    else
+    {
+      $packageName = "Planomatic_$branchLabel_$(major).$(minor).$(revision).0.msix"
+    }
+    Write-Host "##vso[task.setvariable variable=packageName;]$packageName"
+  displayName: 'Setup Branch Label and Package Name'
+
+- powershell: |
+    Write-Host "##vso[task.LogIssue type=warning;] branchLabel is $(branchLabel)"
     [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
     $path = "PlanomaticPackage/Package.appxmanifest"
     $doc = [System.Xml.Linq.XDocument]::Load($path)
@@ -40,18 +59,21 @@ steps:
     $xApplication = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/foundation/windows10}Application"
     $xVisualElements = [System.Xml.Linq.XName]"{http://schemas.microsoft.com/appx/manifest/uap/windows10}VisualElements"
     $doc.Root.Element($xIdentity).Attribute("Version").Value = "$(major).$(minor).$(revision).0"
-    $doc.Root.Element($xIdentity).Attribute("Name").Value = "Planomatic$(System.PullRequest.SourceBranch)"
-    $doc.Root.Element($xProperties).Element($xDisplayName).Value = "Planomatic_$(System.PullRequest.SourceBranch)"
-    $doc.Root.Element($xApplications).Element($xApplication).Element($xVisualElements).Attribute("DisplayName").Value = "Planomatic_$(System.PullRequest.SourceBranch)"
+    if ("$(branchLabel)" -ne 'Main')
+    {
+      $doc.Root.Element($xIdentity).Attribute("Name").Value = "Planomatic$(branchLabel)"
+      $doc.Root.Element($xProperties).Element($xDisplayName).Value = "Planomatic_$(branchLabel)"
+      $doc.Root.Element($xApplications).Element($xApplication).Element($xVisualElements).Attribute("DisplayName").Value = "Planomatic_$(branchLabel)"
+    }
     $doc.Save($path)
   displayName: 'Setting Version and Branch Name in Package Manifest'
 
 - powershell: |
-   ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0' `
-                                                         -replace '<msix_name>','Planomatic_$(System.PullRequest.SourceBranch)_$(major).$(minor).$(revision).0.msix' `
-                                                         -replace '<appinstaller_file>','plano_$(System.PullRequest.SourceBranch).appinstaller' `
-                                                         -replace '<name>','Planomatic$(System.PullRequest.SourceBranch)') `
-        | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano_$(System.PullRequest.SourceBranch).appinstaller
+      ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0' `
+                                                         -replace '<msix_name>','$(packageName)' `
+                                                         -replace '<appinstaller_file>','plano_$(branchLabel).appinstaller' `
+                                                         -replace '<name>','Planomatic$(branchLabel)') `
+        | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano_$(branchLabel).appinstaller
   displayName: 'Updating Appinstaller file'
 
 - task: MSBuild@1
@@ -59,7 +81,7 @@ steps:
     solution: $(solution)
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
-    msbuildArguments: '/p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\Planomatic_$(System.PullRequest.SourceBranch)_$(major).$(minor).$(revision).0.msix /p:AppxPackageSigningEnabled=false'
+    msbuildArguments: '/p:AppxPackageOutput=$(Build.ArtifactStagingDirectory)\$(packageName) /p:AppxPackageSigningEnabled=false'
   displayName: 'Build and Package'
 
 - task: DownloadSecureFile@1
@@ -68,7 +90,7 @@ steps:
   displayName: 'Download Secure PFX File'
 
 - script: '"C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x86\signtool"
-    sign /fd SHA256 /f $(Agent.TempDirectory)/certificate.pfx /p 1234 $(Build.ArtifactStagingDirectory)/Planomatic_$(System.PullRequest.SourceBranch)_$(major).$(minor).$(revision).0.msix'
+    sign /fd SHA256 /f $(Agent.TempDirectory)/certificate.pfx /p 1234 $(Build.ArtifactStagingDirectory)/$(packageName)'
   displayName: 'Sign MSIX Package'
 
 - task: PublishBuildArtifacts@1
