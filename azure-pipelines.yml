@@ -32,6 +32,7 @@ steps:
       $branchLabel = "$(Build.SourceBranch)"
       $branchLabel = $branchLabel.substring($branchLabel.lastIndexOf('/') + 1)
     }
+    Write-Host "##vso[task.setvariable variable=branchLabel;]$branchLabel"
     if($branchLabel -eq 'Main')
     {
       $packageName = "Planomatic_$(major).$(minor).$(revision).0.msix"
