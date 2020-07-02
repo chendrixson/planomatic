@@ -69,22 +69,11 @@ steps:
   displayName: 'Setting Version and Branch Name in Package Manifest'
 
 - powershell: |
-    if ("$(branchLabel)" -eq 'Main')
-    {
-      ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0' `
-                                                         -replace '<msix_name>','$(packageName)' `
-                                                         -replace '<appinstaller_file>','plano.appinstaller' `
-                                                         -replace '<name>','Planomatic') `
-        | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano.appinstaller
-    }
-    else
-    {
       ((Get-Content -path PlanoWeb\plano.appinstaller -Raw) -replace '<msix_version>','$(major).$(minor).$(revision).0' `
                                                          -replace '<msix_name>','$(packageName)' `
                                                          -replace '<appinstaller_file>','plano_$(branchLabel).appinstaller' `
                                                          -replace '<name>','Planomatic$(branchLabel)') `
         | Set-Content -Path $(Build.ArtifactStagingDirectory)\plano_$(branchLabel).appinstaller
-    }
   displayName: 'Updating Appinstaller file'
 
 - task: MSBuild@1
