@@ -43,7 +43,8 @@ steps:
     }
     else
     {
-      $packageName = "Planomatic_$branchLabel_$(major).$(minor).$(revision).0.msix"
+      $packageName = "Planomatic_" + $branchLabel
+      $packageName += "_$(major).$(minor).$(revision).0.msix"
     }
     Write-Host "##vso[task.setvariable variable=packageName;]$packageName"
   displayName: 'Setup Branch Label and Package Name'
