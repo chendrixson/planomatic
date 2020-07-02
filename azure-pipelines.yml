@@ -23,12 +23,13 @@ steps:
     restoreSolution: '$(solution)'
 
 - powershell: |
-    if ($(Build.SourceBranch).endswith("master"))
+    $sourceBranch = "$(Build.SourceBranch)";
+    if ($sourceBranch.endswith("master"))
     { 
       Write-Host "##vso[task.LogIssue type=warning;] This is a master build"
       Write-Host "##vso[task.setvariable variable=isMain;]true"
     }
-    elseif ($(Build.SourceBranch).endswith("merge"))
+    elseif ($sourceBranch.endswith("merge"))
     {
       Write-Host "##vso[task.LogIssue type=warning;] This is a PR build, use system.pr.sourcebranch"    
       Write-Host "##vso[task.LogIssue type=warning;] PR.SourceBrance is $(System.PullRequest.SourceBranch)"
