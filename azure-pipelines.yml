@@ -34,6 +34,7 @@ steps:
       Write-Host "##vso[task.LogIssue type=warning;] CI to a sub branch"    
       Write-Host "##vso[task.LogIssue type=warning;] SourceBranch is $(Build.SourceBranch)"
       $branchLabel = "$(Build.SourceBranch)"
+      $branchLabel = $branchLabel.substring($branchLabel.lastIndexOf('/') + 1)
     }
     Write-Host "##vso[task.setvariable variable=branchLabel;]$branchLabel"
     if($branchLabel -eq 'Main')
