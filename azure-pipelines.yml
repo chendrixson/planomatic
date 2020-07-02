@@ -4,13 +4,6 @@
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
 
-trigger: none
-
-pr:
-  branches:
-   exclude:
-     - master
-
 pool:
   vmImage: 'windows-latest'
 
@@ -28,6 +21,11 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
+
+- powershell: |
+    Write-Host  "##vso[task.LogIssue type=warning;] SourceBranch is $(Build.SourceBranch)"
+    Write-Host  "##vso[task.LogIssue type=warning;] PR.SourceBranc is $(System.PullRequest.SourceBranch)"
+  displayName: 'Dump interesting variables'
 
 - powershell: |
     [Reflection.Assembly]::LoadWithPartialName("System.Xml.Linq")
