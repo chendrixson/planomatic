@@ -30,6 +30,7 @@
                 <Button DockPanel.Dock="Top" Click="TimeForBreak_Click" x:Name="TimeForBreakButton" Margin="20,10,20,10">Time For Break</Button>
                 <!--<TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" x:Name="Version">v</TextBlock>-->
                 <StackPanel VerticalAlignment="Bottom">
+                    <Label x:Name="VersionLabel"></Label>
                     <Slider x:Name="ZoomSlider" Margin="20,10,20,10" Minimum="0" Maximum="400" Value="100" Style="{StaticResource MaterialDesignDiscreteSlider}" ToolTip="Zoom" ValueChanged="Slider_ValueChanged"></Slider>
                     <Label x:Name="ZoomSliderLabel" HorizontalAlignment="Center" Padding="0,0,0,10">Zoom</Label>
                 </StackPanel>
