@@ -29,9 +29,13 @@ namespace Planomatic
             _configPage = new ConfigPage();
             _configPage.LayoutTransform = _zoomTransform;
 
-            myApp().DeliverableList.SetConfig(myApp().CurrentConfig);
-
             InitializeComponent();
+
+            myApp().DeliverableList.SetConfig(myApp().CurrentConfig);
+            myApp().DeliverableList.Refresh();
+
+            // Load config page on startup
+            MainFrame.Content = _configPage;
 
             // grab the version, if we're packaged up
             try
