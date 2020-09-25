@@ -132,7 +132,7 @@ namespace Planomatic
             myConfig().Save();
         }
 
-        private async void LoadFrom_Click(object sender, RoutedEventArgs e)
+        private async void LoadFromFile_Click(object sender, RoutedEventArgs e)
         {
             // Use the File dialog to get a path
             var fileDialog = new SWF.OpenFileDialog();
@@ -143,7 +143,7 @@ namespace Planomatic
             switch (result)
             {
                 case SWF.DialogResult.OK:
-                    myConfig().LoadConfig(fileDialog.FileName);
+                    myConfig().LoadConfigFromFile(fileDialog.FileName);
                     await ((App)App.Current).DeliverableList.Refresh();
                     break;
 
@@ -151,6 +151,13 @@ namespace Planomatic
                     break;
             }
 
+        }
+
+        private async void LoadFromUrl_Click(object sender, RoutedEventArgs e)
+        {
+            // Use the File dialog to get a path
+            var inputBox = new UrlInput();
+            inputBox.ShowDialog();
         }
     }
 }

@@ -102,7 +102,8 @@
             <StackPanel.Children>
                 <Button Margin="5" Click="Save_Click">Save</Button>
                 <Button Margin="5" Click="SaveAs_Button_Click">Save As</Button>
-                <Button Margin="5" Click="LoadFrom_Click">Load From</Button>
+                <Button Margin="5" Click="LoadFromFile_Click">Load File</Button>
+                <Button Margin="5" Click="LoadFromUrl_Click">Load Url</Button>
             </StackPanel.Children>
         </StackPanel>
     </Grid>

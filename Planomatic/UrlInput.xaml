@@ -1,0 +1,16 @@
+﻿<Window x:Class="Planomatic.UrlInput"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Planomatic"
+        mc:Ignorable="d"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="UrlInput" Height="170" Width="400">
+    <StackPanel Margin="10">
+        <Label>Enter URL:</Label>
+        <TextBox x:Name="Url" Margin="10">https://</TextBox>
+        <Button Margin="5" Click="Load_Click">Load</Button>
+    </StackPanel>
+</Window>
