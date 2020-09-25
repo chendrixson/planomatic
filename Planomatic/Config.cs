@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using System.ComponentModel;
 using System.Windows.Data;
 using Microsoft.Win32;
+using Microsoft.SharePoint.Client;
 
 namespace Planomatic
 {
@@ -372,7 +373,14 @@ namespace Planomatic
             ReloadStoredLastConfig();
             if(_lastConfigSet)
             {
-                LoadConfig(LastConfigFilename);
+                if (LastConfigFilename.StartsWith("http"))
+                {
+                    LoadConfigFromUrl(LastConfigFilename);
+                }
+                else
+                {
+                    LoadConfigFromFile(LastConfigFilename);
+                }
             }
 
             // If we don't have an iteration day config item, create one
@@ -671,8 +679,12 @@ namespace Planomatic
             RegistryKey myKey = Registry.CurrentUser.OpenSubKey(_registryKey);
             if(myKey != null)
             {
-                LastConfigFilename = (string)myKey.GetValue(_registryValue);
-                _lastConfigSet = true;
+                string theValue = (string)myKey.GetValue(_registryValue);
+                if (theValue != null)
+                {
+                    LastConfigFilename = (string)myKey.GetValue(_registryValue);
+                    _lastConfigSet = true;
+                }
             }            
         }
 
@@ -711,14 +723,77 @@ namespace Planomatic
             myApp().UpdateStatus($"Saved file {configFilename}");
         }
 
-        public bool LoadConfig(string configFilePath)
+        public bool LoadConfigFromUrl(string url)
+        {
+            try
+            {
+                var request = System.Net.HttpWebRequest.Create(url);
+                var reader = new StreamReader(request.GetResponse().GetResponseStream());
+
+                bool loadReturn = LoadConfig(reader);
+
+                if (loadReturn)
+                {
+                    LastConfigFilename = url;
+                    _lastConfigSet = true;
+
+                    UpdateStoredLastConfig();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Failed to load from url " + url);
+                Debug.WriteLine(e.ToString());
+
+                if (myApp() != null)
+                {
+                    myApp().UpdateStatus($"Failed to load url {url}");
+                }
+            }
+
+            return false;
+        }
+
+        public bool LoadConfigFromFile(string configFilePath)
+        {
+            try
+            {
+                var reader = new StreamReader(configFilePath);
+
+                bool loadReturn = LoadConfig(reader);
+
+                if (loadReturn)
+                {
+                    LastConfigFilename = configFilePath;
+                    _lastConfigSet = true;
+
+                    UpdateStoredLastConfig();
+                }
+
+                return loadReturn;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Failed to deserialize from file " + configFilePath);
+                Debug.WriteLine(e.ToString());
+
+                if (myApp() != null)
+                {
+                    myApp().UpdateStatus($"Failed to load config file {configFilePath}");
+                }
+
+                return false;
+            }
+        }
+
+        public bool LoadConfig(StreamReader configStream)
         {
             try
             {
                 var serializer = new XmlSerializer(typeof(Config));
-                var reader = new StreamReader(configFilePath);
 
-                Config newConfig = (Config)serializer.Deserialize(reader);
+                Config newConfig = (Config)serializer.Deserialize(configStream);
 
                 // Load all the properties into THIS instance of the config
                 this.ServerName = newConfig.ServerName;
@@ -741,20 +816,15 @@ namespace Planomatic
                 }
 
                 UpdateCapacity();
-
-                LastConfigFilename = configFilePath;
-                _lastConfigSet = true;
-
-                UpdateStoredLastConfig();
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Failed to deserialize from file " + configFilePath);
+                Debug.WriteLine("Failed to deserialize from stream");
                 Debug.WriteLine(e.ToString());
                 return false;
             }
 
-            Debug.WriteLine("Successfully deserialized from file " + configFilePath);
+            Debug.WriteLine("Successfully deserialized from stream");
             return true;
         }
     }

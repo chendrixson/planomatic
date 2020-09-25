@@ -40,7 +40,7 @@ namespace Planomatic
                 if (arguments[1].EndsWith(".plano"))
                 {
                     string filePathFormMainArgs = arguments[1];
-                    CurrentConfig.LoadConfig(filePathFormMainArgs);
+                    CurrentConfig.LoadConfigFromFile(filePathFormMainArgs);
                 }
             }
         }

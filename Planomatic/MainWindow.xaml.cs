@@ -32,7 +32,6 @@ namespace Planomatic
             InitializeComponent();
 
             myApp().DeliverableList.SetConfig(myApp().CurrentConfig);
-            myApp().DeliverableList.Refresh();
 
             // Load config page on startup
             MainFrame.Content = _configPage;
