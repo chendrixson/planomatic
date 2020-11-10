@@ -123,7 +123,7 @@ namespace Planomatic
             Wiql query = new Wiql() { Query = queryString };
                 WorkItemQueryResult queryResults = witClient.QueryByWiqlAsync(query).Result;
 
-                if (queryResults == null)
+                if (queryResults == null) 
                 {
                     Debug.WriteLine("Got no query result");
                 }

@@ -478,7 +478,15 @@ namespace Planomatic
         {
             _ado.Connect(myConfig().ServerName);
 
-            var allItemsData = _ado.GetWorkItems(myConfig().RootNode, myConfig().Project, myConfig().ReleaseList, myConfig().ExtraQuery);
+            var allItemsData = new List<Dictionary<string, object>>(); // empty result in case we hit an exception
+            try
+            {
+                allItemsData = _ado.GetWorkItems(myConfig().RootNode, myConfig().Project, myConfig().ReleaseList, myConfig().ExtraQuery);
+            }
+            catch (Exception e)
+            {
+                myApp().UpdateStatus("Got exception loading data: " + e.ToString());
+            }
 
             return allItemsData;
         }
