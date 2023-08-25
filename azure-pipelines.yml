@@ -93,12 +93,13 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
 
-- task: AzureFileCopy@4
-  inputs:
-    SourcePath: '$(Build.ArtifactStagingDirectory)\*'
-    azureSubscription: 'planostorage'
-    Destination: 'AzureBlob'
-    storage: 'planomaticstorage'
-    ContainerName: '$web'
-    targetPath: 'branch'
+# Comment out the copy out to web step for now
+#- task: AzureFileCopy@4
+#  inputs:
+#    SourcePath: '$(Build.ArtifactStagingDirectory)\*'
+#    azureSubscription: 'planostorage'
+#    Destination: 'AzureBlob'
+#    storage: 'planomaticstorage'
+#    ContainerName: '$web'
+#    targetPath: 'branch'
     
