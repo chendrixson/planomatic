@@ -61,11 +61,6 @@ namespace Planomatic
 
             // Run a query for each release to get the IDs, then get all the fields
             string[] releaseSplit = releases.Split(';'); 
-            if(releaseSplit.Length == 0)
-            {
-                Debug.WriteLine("No releases in list");
-                return null;
-            }
 
             // check if the rootnode is semi-colon separated or not 
             string rootNodeQuery;
@@ -97,8 +92,12 @@ namespace Planomatic
             {
                 queryString += $" AND {extraQuery}";
             }
-                
-            if (releases.Length == 1)
+            
+            if (releases.Length == 0)
+            {
+                // Don't include any release critera
+            }
+            else if (releases.Length == 1)
             {
                 queryString += $" AND [Microsoft.VSTS.Common.Release] = '{releases}'";
             }
